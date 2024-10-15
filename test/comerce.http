@@ -1,0 +1,42 @@
+#Peticion por cif
+GET http://localhost:3000/api/comerce/B12345678
+
+###
+#Mostrar todos los comercios
+GET http://localhost:3000/api/comerce
+
+###
+#Crear un nuevo comercio
+POST http://localhost:3000/api/comerce HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Tech Solutions",
+    "cif": "B12345678",
+    "adress": "123 Calle Principal, Ciudad",
+    "email": "contacto@techsolutions.com",
+    "phone": "+34 123 456 789",
+    "id_page": 1
+}
+
+###
+#Actualizar datos de un comercio
+PUT http://localhost:3000/api/comerce/B12345678 HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Tesexls",
+    "cif": "B12345678",
+    "adress": "123 Calle Principal, Ciudad",
+    "email": "contacto@techsolutions.com",
+    "phone": "+34 123 456 789",
+    "id_page": 1
+}
+
+###
+#Borrado fisico
+DELETE http://localhost:3000/api/comerce/B12345678
+
+###
+#Borrado logico
+DELETE http://localhost:3000/api/comerce/archive/B12345678
