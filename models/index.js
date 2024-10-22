@@ -1,4 +1,5 @@
 const models = {
-    comerModel: require("./nosql/schema")//Se recibe el modelo
+    comerModel: require("./nosql/comerce"),//Se recibe el modelo
+    webModel: require("./nosql/web")
 }
 module.exports = models//Posteriormente se exporta
