@@ -7,7 +7,7 @@ const validatorCreateitem = [
     check('adress').exists().notEmpty(),
     check('email').exists().isEmail(),
     check('phone').exists().notEmpty(),
-    check('id_page').exists().notEmpty(),
+    check('id_page').exists(),
     (req, res, next) => {
         return validateResults(req, res, next);
     }

@@ -1,0 +1,64 @@
+###Resgistro 1
+POST http://localhost:3000/api/clients/register HTTP/1.1a
+Content-Type: application/json
+
+{
+    "name": "Juan Perez",
+    "email": "juan.perez@example.com",
+    "password": "password123",
+    "age": "30",
+    "city": "Lima",
+    "interests": ["tecnología", "lectura", "viajes"],
+    "spam": true
+}
+
+###Resgistro 2
+POST http://localhost:3000/api/clients/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Ana López",
+    "email": "ana.lopez@example.com",
+    "password": "password456",
+    "age": "28",
+    "city": "Arequipa",
+    "interests": ["fotografía", "cocina", "yoga"],
+    "spam": false
+}
+
+###Login 1
+POST http://localhost:3000/api/clients/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "juan.perez@example.com",
+    "password": "password123"
+}
+
+###Login 2
+POST http://localhost:3000/api/clients/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "ana.lopez@example.com",
+    "password": "password456"
+}
+
+###Actualizar usuario 1
+PUT http://localhost:3000/api/clients/671f548cd4e7912c26b8c1fa
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzFmYTk4NGQxNjMzZWVmNDhlYjNjMzEiLCJyb2xlIjpbImNsaWVudCJdLCJpYXQiOjE3MzAxMjgyNzUsImV4cCI6MTczMDEzNTQ3NX0.GoLJONKIo-wDzCLrfda_nfEr4xEBbEvZAqohy_xCC98
+
+{
+    "name": "Juan Tetas",
+    "email": "juan.tetas@example.com",
+    "password": "wheneresgei",
+    "age": "32",
+    "city": "Puen",
+    "interests": ["Anime", "limpiar", "pelear"],
+    "spam": false
+}
+
+###Borrar Usuario
+DELETE http://localhost:3000/api/clients/671fc8e7f49ac4dc4dbeff71
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzFmYzhlM2Y0OWFjNGRjNGRiZWZmNmYiLCJyb2xlIjpbImNsaWVudCJdLCJpYXQiOjE3MzAxMzYzMDAsImV4cCI6MTczMDE0MzUwMH0.-e-L5LHlYeb7YTBFOlNkmS4qoG6PK26ulcf1gm8Pp4o

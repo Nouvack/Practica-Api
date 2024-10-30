@@ -1,14 +1,14 @@
 #Peticion por cif
 GET http://localhost:3000/api/comerce/B12345678
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIyOTBhMGU2NjY0YzM0YTcxMmE3ZTEiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTczMDMyMDU3NywiZXhwIjoxNzMwMzM0OTc3fQ.BCelWTJ6IWp8GvpxOcEBLFuBV97Vm6vth_pYeIXQSDs
 ###
 #Mostrar todos los comercios
 GET http://localhost:3000/api/comerce
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzFmYzhlN2Y0OWFjNGRjNGRiZWZmNzEiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTczMDI3MTgxNywiZXhwIjoxNzMwMjc5MDE3fQ.n7x-PMlU98U6WhmbfoYvPUilzKOxdtzTFk3m9Nbwk_E
 ###
-#Crear un nuevo comercio
 POST http://localhost:3000/api/comerce HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIyOTBhMGU2NjY0YzM0YTcxMmE3ZTEiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTczMDMxODUxOCwiZXhwIjoxNzMwMzI1NzE4fQ.bfbntxP_DxrzZWwxaBKzgjLgMPeVw-ippo5iAxqqCvA
 
 {
     "name": "Tech Solutions",
@@ -16,8 +16,23 @@ Content-Type: application/json
     "adress": "123 Calle Principal, Ciudad",
     "email": "contacto@techsolutions.com",
     "phone": "+34 123 456 789",
-    "id_page": 1
+    "id_page": null
 }
+
+###
+POST http://localhost:3000/api/comerce HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIyOTBhMGU2NjY0YzM0YTcxMmE3ZTEiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTczMDMxODUxOCwiZXhwIjoxNzMwMzI1NzE4fQ.bfbntxP_DxrzZWwxaBKzgjLgMPeVw-ippo5iAxqqCvA
+
+{
+    "name": "Digital Ventures",
+    "cif": "B98765432",
+    "adress": "456 Avenida Empresarial, Ciudad",
+    "email": "info@digitalventures.com",
+    "phone": "+34 987 654 321",
+    "id_page": null
+}
+
 
 ###
 #Actualizar datos de un comercio

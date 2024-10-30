@@ -20,7 +20,7 @@ const webSchema = new mongoose.Schema(
         img: {
             type: [String]
         },
-        user_review: {
+        client_review: {
             scoring: {
                 type: Number,
                 min: 0,

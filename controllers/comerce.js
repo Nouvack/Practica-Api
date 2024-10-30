@@ -1,5 +1,8 @@
 const { comerModel } = require("../models/index")//Importamos el esquema usado en models
 const mongooseDelete = require("mongoose-delete")//Importamos para poder hacer el borrado logico
+const { matchedData } = require("express-validator")
+const { tokenComerce } = require("../utils/handleJwt.js")
+const { handleHttpError } = require("../utils/handleErrror.js")
 
 const getItems = async (req, res) => {//Funcion para mostrar todos los datos que hay almacenados en la DB
     try {// Control de excepciones para las funciones
@@ -13,22 +16,52 @@ const getItems = async (req, res) => {//Funcion para mostrar todos los datos que
 const getItem = async (req, res) => {
     try {
         const cif = req.params.cif
-        const data = await comerModel.findOne({ cif: cif })//Funcion que me muestra un solo comercio en base a su cif
+        const dataComerce = await comerModel.findOne({ cif: cif })//Funcion que me muestra un solo comercio en base a su cif
+        const data = {
+            token: await tokenComerce({cif: dataComerce.cif}),
+            comerce: dataComerce 
+        }
         res.send({ data })
     } catch (err) {
         res.send("Ocurrio un error", err)
     }
 }
 
+// const createItem = async (req, res) => {
+//     try {
+//         const { body } = req
+//         const data = await comerModel.create(body)//Aqui se encarga de agregar nuevos comercios con los datos que le mandamos
+//         res.send(data)
+//     } catch (err) {
+//         res.send("Ocurrio un error", err)
+//     }
+// }
+
+
+
 const createItem = async (req, res) => {
     try {
         const { body } = req
-        const data = await comerModel.create(body)//Aqui se encarga de agregar nuevos comercios con los datos que le mandamos
+        const existingComer = await comerModel.findOne({ email: body.email });
+        if (existingComer) {
+            handleHttpError(res, "ERROR_COMERCE_ALREADY_EXISTS", 409);
+            return;
+        }
+        const dataComerce = await comerModel.create(body)
+        const data = {
+            token: await tokenComerce({cif: dataComerce.cif}),
+            comerce: dataComerce 
+        }
         res.send(data)
     } catch (err) {
-        res.send("Ocurrio un error", err)
+        console.log(err)
+        handleHttpError(res, "ERROR_CREATE_COMERCE")
     }
 }
+
+
+
+
 
 const updateItem = async (req, res) => {
     try {

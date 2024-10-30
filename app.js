@@ -8,6 +8,7 @@ const dbConnect = require("./config/mongo")//Aqui importa la funcion dbConnect d
 const app = express()
 //Le decimos a la app de Express() que use cors para evitar el error Cross-Domain (XD)
 //app.arguments(cors())
+app.use(express.static("storage"))
 app.use(express.json())
 
 app.use("/api", require("./routes"))//Se configura como se pasan las rutas en las solicitudes
