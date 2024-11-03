@@ -1,4 +1,4 @@
-const { webModel, comerModel } = require("../models/index")//Importamos el esquema usado en models
+const { webModel, comerModel, clientModel } = require("../models/index")//Importamos el esquema usado en models
 const mongooseDelete = require("mongoose-delete")//Importamos para poder hacer el borrado logico
 const { handleHttpError } = require("../utils/handleErrror")
 const { matchedData } = require("express-validator")
@@ -22,6 +22,19 @@ const getWeb = async (req, res) => {
     }
 }
 
+const getclients = async (req, res) => {
+    try {
+        const {interests} = req.params;
+        const data = await clientModel.find(
+            {interests, spam: true}
+        ).select(" email name")
+        res.send(data)
+    } catch (err){
+        console.log(err)
+        handleHttpError(res, 'ERROR_GETTING_CLIENTS', 500)
+    }
+}
+
 const createWeb = async (req, res) => {
     try {
         const comerce = req.comerce
@@ -34,6 +47,7 @@ const createWeb = async (req, res) => {
         await comerModel.findByIdAndUpdate(comerce._id, { id_page: data._id }, { new: true })
         res.send(data)
     } catch (err) {
+        console.log(err)
         handleHttpError(res, "ERROR", 500)
     }
 }
@@ -47,7 +61,7 @@ const patchWeb = async (req, res) => {
             return
         }
         const { body } = req
-        const data = await webModel.findByIdAndUpdate(id, body, { new: true })
+        const data = await webModel.findByIdAndUpdate(id, {$push: body}, { new: true })
         res.send(data)
     } catch (err) {
         console.log(err)
@@ -129,7 +143,7 @@ const deleteWeb = async (req, res) => {
 }
 
 module.exports = {//Exporto las funciones para la ruta de la web
-    getWeb, getWebs,
+    getWeb, getWebs,getclients,
 
     createWeb, updateWeb,
 

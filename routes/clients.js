@@ -11,20 +11,21 @@ const {authMiddleware} = require("../midleware/sesion")
  *  post:
  *      tags:
  *      - Client
- *      summary: Client register
- *      description: Register a new client
+ *      summary: Register a new client
+ *      description: Registers a new client in the system
  *      requestBody:
+ *          required: true
  *          content:
  *              application/json:
  *                  schema:
  *                      $ref: "#/components/schemas/client"
  *      responses:
  *          '200':
- *              description: Returns the inserted object
+ *              description: Client successfully registered
  *          '401':
  *              description: Validation error
  */
-router.post("/register", validatorRegister, registerCtrl)
+router.post("/register", validatorRegister, registerCtrl);
 
 /**
  * @openapi
@@ -32,25 +33,76 @@ router.post("/register", validatorRegister, registerCtrl)
  *  post:
  *      tags:
  *      - Client
- *      summary: Login client
- *      description: ''
+ *      summary: Client login
+ *      description: Allows a client to log into the system
  *      requestBody:
+ *          required: true
  *          content:
  *              application/json:
  *                  schema:
  *                      $ref: "#/components/schemas/login"
  *      responses:
  *          '200':
- *              description: Returns the inserted object
+ *              description: Login successful
  *          '401':
- *              description: Validation error
+ *              description: Invalid credentials
  */
-router.post("/login", validatorLogin, loginCtrl)
+router.post("/login", validatorLogin, loginCtrl);
 
-router.put("/:id", authMiddleware, validatorUpdate, updateClient)
+/**
+ * @openapi
+ * /api/client/{id}:
+ *  put:
+ *      tags:
+ *      - Client
+ *      summary: Update client information
+ *      description: Updates the information of an existing client
+ *      parameters:
+ *          - in: path
+ *            name: id
+ *            required: true
+ *            schema:
+ *                type: string
+ *            description: The ID of the client to update
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: "#/components/schemas/client"
+ *      responses:
+ *          '200':
+ *              description: Client successfully updated
+ *          '401':
+ *              description: Authorization error
+ *          '404':
+ *              description: Client not found
+ */
+router.put("/:id", authMiddleware, validatorUpdate, updateClient);
 
-router.put("/:id", authMiddleware, validatorUpdate, updateClient)
-
-router.delete("/:id", authMiddleware, validatorGetClient, deletefisClient)
+/**
+ * @openapi
+ * /api/client/{id}:
+ *  delete:
+ *      tags:
+ *      - Client
+ *      summary: Delete a client
+ *      description: Deletes an existing client by ID
+ *      parameters:
+ *          - in: path
+ *            name: id
+ *            required: true
+ *            schema:
+ *                type: string
+ *            description: The ID of the client to delete
+ *      responses:
+ *          '200':
+ *              description: Client successfully deleted
+ *          '401':
+ *              description: Authorization error
+ *          '404':
+ *              description: Client not found
+ */
+router.delete("/:id", authMiddleware, validatorGetClient, deletefisClient);
 
 module.exports = router

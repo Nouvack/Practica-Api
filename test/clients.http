@@ -8,7 +8,7 @@ Content-Type: application/json
     "password": "password123",
     "age": "30",
     "city": "Lima",
-    "interests": ["tecnología", "lectura", "viajes"],
+    "interests": ["turismo", "lectura", "viajes"],
     "spam": true
 }
 

@@ -4,7 +4,7 @@ const { matchedData } = require("express-validator")
 const { tokenComerce } = require("../utils/handleJwt.js")
 const { handleHttpError } = require("../utils/handleErrror.js")
 
-const getItems = async (req, res) => {//Funcion para mostrar todos los datos que hay almacenados en la DB
+const getComerces = async (req, res) => {//Funcion para mostrar todos los datos que hay almacenados en la DB
     try {// Control de excepciones para las funciones
         const data = await comerModel.find().sort({ cif: 1 });//Este fracmento se encarga de ordenar en base al cif de manera ascendente(-1 si queremos descendente) 
         res.send(data)
@@ -13,7 +13,7 @@ const getItems = async (req, res) => {//Funcion para mostrar todos los datos que
     }
 }
 
-const getItem = async (req, res) => {
+const getComerce = async (req, res) => {
     try {
         const cif = req.params.cif
         const dataComerce = await comerModel.findOne({ cif: cif })//Funcion que me muestra un solo comercio en base a su cif
@@ -27,19 +27,7 @@ const getItem = async (req, res) => {
     }
 }
 
-// const createItem = async (req, res) => {
-//     try {
-//         const { body } = req
-//         const data = await comerModel.create(body)//Aqui se encarga de agregar nuevos comercios con los datos que le mandamos
-//         res.send(data)
-//     } catch (err) {
-//         res.send("Ocurrio un error", err)
-//     }
-// }
-
-
-
-const createItem = async (req, res) => {
+const createComerce = async (req, res) => {
     try {
         const { body } = req
         const existingComer = await comerModel.findOne({ email: body.email });
@@ -63,7 +51,7 @@ const createItem = async (req, res) => {
 
 
 
-const updateItem = async (req, res) => {
+const updateComerce = async (req, res) => {
     try {
         const cif = req.params.cif;
         const { body } = req;
@@ -75,7 +63,7 @@ const updateItem = async (req, res) => {
 
 }
 
-const deletefisItem = async (req, res) => {
+const deletefisComerce = async (req, res) => {
     try {
         const cif = req.params.cif;
         const del = await comerModel.deleteOne({ cif: cif });
@@ -85,7 +73,7 @@ const deletefisItem = async (req, res) => {
     }
 }
 
-const deleteItem = async (req, res) => {
+const deleteComerce = async (req, res) => {
     try {
         const cif = req.params.cif;
         const del = await comerModel.delete({ cif: cif });//Funcion de borrado logico que borra el comercio, pero con opcion de recuperar los datos borrados
@@ -96,9 +84,9 @@ const deleteItem = async (req, res) => {
 }
 
 module.exports = {//Exporto las funciones para la ruta de comercio
-    getItems, getItem,
+    getComerces, getComerce,
 
-    createItem, updateItem,
+    createComerce, updateComerce,
 
-    deleteItem, deletefisItem
+    deleteComerce, deletefisComerce
 };

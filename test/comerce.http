@@ -4,7 +4,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIyOTBhM
 ###
 #Mostrar todos los comercios
 GET http://localhost:3000/api/comerce
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzFmYzhlN2Y0OWFjNGRjNGRiZWZmNzEiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTczMDI3MTgxNywiZXhwIjoxNzMwMjc5MDE3fQ.n7x-PMlU98U6WhmbfoYvPUilzKOxdtzTFk3m9Nbwk_E
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIyOTBhMGU2NjY0YzM0YTcxMmE3ZTEiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTczMDM4MzA2NywiZXhwIjoxNzMwMzk3NDY3fQ.A-2WE86ClPduE-MG5qysWvi-GuCmrE8zi9ldhY1QN-0
 ###
 POST http://localhost:3000/api/comerce HTTP/1.1
 Content-Type: application/json
