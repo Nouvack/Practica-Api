@@ -1,14 +1,16 @@
-#Peticion por cif
-GET http://localhost:3000/api/comerce/B12345678
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIyOTBhMGU2NjY0YzM0YTcxMmE3ZTEiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTczMDMyMDU3NywiZXhwIjoxNzMwMzM0OTc3fQ.BCelWTJ6IWp8GvpxOcEBLFuBV97Vm6vth_pYeIXQSDs
-###
 #Mostrar todos los comercios
 GET http://localhost:3000/api/comerce
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIyOTBhMGU2NjY0YzM0YTcxMmE3ZTEiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTczMDM4MzA2NywiZXhwIjoxNzMwMzk3NDY3fQ.A-2WE86ClPduE-MG5qysWvi-GuCmrE8zi9ldhY1QN-0
 ###
+
+#Peticion por cif
+GET http://localhost:3000/api/comerce/B12345678
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzNmNDY0ZDEwMTZiYmYzYTIwNGE4NDQiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTczMjIwMDc2MywiZXhwIjoxNzMyMjE1MTYzfQ.sgJt2OxBiwlN43bJ6L-7ORaPjQRT8VzoRPrCWF7HUGw
+
+###
 POST http://localhost:3000/api/comerce HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIyOTBhMGU2NjY0YzM0YTcxMmE3ZTEiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTczMDMxODUxOCwiZXhwIjoxNzMwMzI1NzE4fQ.bfbntxP_DxrzZWwxaBKzgjLgMPeVw-ippo5iAxqqCvA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQxMDc2ODY0YjJmYmFjYjEyZDIwMDAiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTczMjQ1MDkyMSwiZXhwIjoxNzMyNDY1MzIxfQ.4YmrtszszsL1PjV6xhlA2M2g8G7NnhsdIjpVxZQQMNo
 
 {
     "name": "Tech Solutions",
@@ -22,7 +24,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIyOTBhM
 ###
 POST http://localhost:3000/api/comerce HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIyOTBhMGU2NjY0YzM0YTcxMmE3ZTEiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTczMDMxODUxOCwiZXhwIjoxNzMwMzI1NzE4fQ.bfbntxP_DxrzZWwxaBKzgjLgMPeVw-ippo5iAxqqCvA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzNjYzVhZGFjNjVlM2E3MjA5YTdmNzEiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTczMjAzNjA5MiwiZXhwIjoxNzMyMDUwNDkyfQ.Cf2h1-zFcuZCtCdtnFpcmgH7Cuiu9K1EM_iixikoNZw
 
 {
     "name": "Digital Ventures",
@@ -36,22 +38,32 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzIyOTBhM
 
 ###
 #Actualizar datos de un comercio
-PUT http://localhost:3000/api/comerce/B12345678 HTTP/1.1
+PUT http://localhost:3000/api/comerce?cif=B12345678 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzNmNDY0ZDEwMTZiYmYzYTIwNGE4NDQiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTczMjIwNjg0MCwiZXhwIjoxNzMyMjIxMjQwfQ.06GiqJCgBADguHE0yV49GdED8A3qQ19r-PrBMfiZ3TA
 
 {
     "name": "Tesexls",
     "cif": "B12345678",
     "adress": "123 Calle Principal, Ciudad",
     "email": "contacto@techsolutions.com",
-    "phone": "+34 123 456 789",
-    "id_page": 1
+    "phone": "+34 123 456 789"
 }
 
 ###
+POST http://localhost:3000/api/comerce/mail
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiJCMTIzNDU2NzgiLCJpYXQiOjE3MzIyMDA3NzksImV4cCI6MTc2MzczNjc3OX0.mzik_fiyMdo9MBm6v6HOfzeTodFL2TakVvylztt2324
+
+{
+    "subject": "Correo de prueba",
+    "text": "holaaaa",
+    "to": [ "noamsantanderb@gmail.com"]
+}
+###
 #Borrado fisico
-DELETE http://localhost:3000/api/comerce/B12345678
+DELETE http://localhost:3000/api/comerce?cif=B12345678
 
 ###
 #Borrado logico
-DELETE http://localhost:3000/api/comerce/archive/B12345678
+DELETE http://localhost:3000/api/comerce/archive?cif=B12345678

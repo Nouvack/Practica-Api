@@ -22,7 +22,7 @@ const webSchema = new mongoose.Schema(
         },
         client_review: {
             scoring: {
-                type: Number,
+                type: [Number],
                 min: 0,
                 max: 5
             },
@@ -30,7 +30,7 @@ const webSchema = new mongoose.Schema(
                 type: Number
             },
             reviews: {
-                type: String
+                type: [String]
             }
         }
     }

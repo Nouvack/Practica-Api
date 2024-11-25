@@ -6,11 +6,11 @@ const validatorCreateWeb = [
     check('activity').exists().notEmpty(),
     check('tittle').exists().notEmpty(),
     check('sumary').exists().notEmpty(),
-    check('text').exists().notEmpty().isArray(),
+    check('text').exists().isArray(),
     check('img').exists().isArray(),
-    check('client_review.scoring').optional().isNumeric().isFloat({ min: 0, max: 5 }),
-    check('client_review.score').optional().isNumeric(),
-    check('client_review.reviews').optional().isString(),
+    check('client_review.scoring').optional().isArray(),
+    check('client_review.total_score').optional().isNumeric(),
+    check('client_review.reviews').optional().isArray(),
     (req, res, next) => {
         return validateResults(req, res, next);
     }

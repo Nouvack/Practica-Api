@@ -1,4 +1,4 @@
-const swaggerJsdoc = require("swagger-jsdoc")
+const swaggerJsdoc = require("swagger-jsdoc");
 
 const options = {
     definition: {
@@ -122,42 +122,46 @@ const options = {
                         },
                         tittle: {
                             type: "string",
-                            example: "Explorando Lima"
+                            example: "Ven y disfruta de las maravillas de Lima"
                         },
                         sumary: {
                             type: "string",
-                            example: "Una guía rápida para conocer Lima"
+                            example: "Nos enfocamos en explorar la ciudad de Lima"
                         },
                         text: {
                             type: "array",
                             items: {
-                                type: "string",
-                                example: "Descripción detallada sobre un aspecto turístico de Lima"
-                            }
+                                type: "string"
+                            },
+                            example: []
                         },
                         img: {
                             type: "array",
                             items: {
-                                type: "string",
-                                example: "https://example.com/image.jpg"
-                            }
+                                type: "string"
+                            },
+                            example: [] 
                         },
                         client_review: {
                             type: "object",
                             properties: {
                                 scoring: {
-                                    type: "number",
-                                    minimum: 0,
-                                    maximum: 5,
-                                    example: 4
+                                    type: "array",
+                                    items: {
+                                        type: "number"
+                                    },
+                                    example: [] 
                                 },
                                 total_score: {
                                     type: "number",
-                                    example: 20
+                                    example: 0 
                                 },
                                 reviews: {
-                                    type: "string",
-                                    example: "Excelente guía turística"
+                                    type: "array",
+                                    items: {
+                                        type: "string"
+                                    },
+                                    example: []
                                 }
                             }
                         }
@@ -169,5 +173,4 @@ const options = {
     apis: ["./routes/*.js"],
 };
 
-
-module.exports = swaggerJsdoc(options)
+module.exports = swaggerJsdoc(options);

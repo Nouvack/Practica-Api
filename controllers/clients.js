@@ -4,11 +4,11 @@ const { encrypt, compare } = require("../utils/handlePassword.js")
 const { handleHttpError } = require("../utils/handleErrror.js")
 const { clientModel } = require('../models/index.js')
 
-const registerCtrl = async (req, res) => {
+const registerCtrl = async (req, res) => {//Registrar un nuevo usuario
     try {
         req = matchedData(req)
         const password = await encrypt(req.password)
-        const body = { ...req, password } // Con "..." duplicamos el objeto y le añadimos o sobreescribimos una propiedad
+        const body = { ...req, password } 
         const dataClient = await clientModel.create(body)
         dataClient.set('password', undefined, { strict: false })
         const data = {
@@ -19,9 +19,8 @@ const registerCtrl = async (req, res) => {
         handleHttpError(res, "ERROR_REGISTER_USER")
     }
 }
-//TODO router.post("/login", (req, res) => {}
 
-const loginCtrl = async (req, res) => {
+const loginCtrl = async (req, res) => {//Iniciar sesion
     try {
         req = matchedData(req)
         const client = await clientModel.findOne({ email: req.email }).select("password name role email")
@@ -47,28 +46,26 @@ const loginCtrl = async (req, res) => {
     }
 }
 
-const updateClient = async (req, res) => {
+const updateClient = async (req, res) => {//Actualizar un usuario
     try {
-        //Extrae el id y el resto lo asigna a la constante body
-        // const { id, ...body } = matchedData(req) //Extrae el id y el resto lo asigna a la constante body
-        // const id = req.params.id
-        // const {body} = req
-        const token_id = req.user._id
-        const id = req.params.id
+        const token_id = req.user._id; 
+        const id = req.params.id; 
         if (!token_id.equals(id)) {
-            handleHttpError(res, "AUTH_ERROR", 403)
-            return
+            handleHttpError(res, "AUTH_ERROR", 403);
+            return;
         }
-        const body = matchedData(req)
-        const data = await clientModel.findByIdAndUpdate(id, body, { new: true })
-        res.send(data)
+        const body = matchedData(req);
+        if (body.password) {
+            body.password = await encrypt(body.password);
+        }
+        const data = await clientModel.findByIdAndUpdate(id, body, { new: true });
+        res.send(data);
     } catch (err) {
-        console.log(err)
-        handleHttpError(res, 'ERROR_UPDATE_USER')
+        handleHttpError(res, 'ERROR_UPDATE_USER');
     }
-}
+};
 
-const deletefisClient = async (req, res) => {
+const deletefisClient = async (req, res) => {//Borrado fisico del usuario
     try {
         const token_id = req.user._id
         const id = req.params.id
@@ -77,9 +74,9 @@ const deletefisClient = async (req, res) => {
             return
         }
         const del = await clientModel.deleteOne({ _id: id });
-        res.send("Eliminado");//Funcion de borrado fisico, lo que significa que, en este caso, usando el cif de referencia, el comercio se borra permanentemente de la base de datos, 
+        res.json(del)
     } catch (err) {
-        res.send("No se pudo", err);
+        handleHttpError(res, "ERROR_DELETE_USER")
     }
 }
 

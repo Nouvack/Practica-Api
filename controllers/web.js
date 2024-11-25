@@ -3,41 +3,54 @@ const mongooseDelete = require("mongoose-delete")//Importamos para poder hacer e
 const { handleHttpError } = require("../utils/handleErrror")
 const { matchedData } = require("express-validator")
 
-const getWebs = async (req, res) => {//Funcion para mostrar todos los datos que hay almacenados en la DB
-    try {// Control de excepciones para las funciones
-        const data = await webModel.find({});//Este fracmento se encarga de ordenar en base al id de manera ascendente(-1 si queremos descendente) 
-        res.send(data)
-    } catch (err) {
-        handleHttpError(res, "ERROR", 500)
-    }
-}
-
-const getWeb = async (req, res) => {
+const getWebs = async (req, res) => {//Buscar web por id ciudad actividad o ordenado en base a su scoring
     try {
-        const id = req.params.id
-        const data = await webModel.findById(id)//Funcion que me muestra una sola web en base a su id
-        res.send({ data })
+        const { city, act, scoring, id } = req.query
+        const filter = {};
+
+        if (city) {
+            filter.city = { $regex: city, $options: 'i' }
+        }
+        if (act) {
+            filter.activity = { $regex: act, $options: 'i' }
+        }
+        let data;
+        if (scoring) {
+            data = await webModel.find(filter).sort({ "client_review.scoring": -1 })
+        }
+        else if (id) {
+            data = await webModel.findById(id)
+        } else {
+            data = await webModel.find(filter)
+        }
+        res.send(data);
     } catch (err) {
-        handleHttpError(res, "ERROR", 500)
+        handleHttpError(res, "ERROR_GET_WEBS");
     }
-}
+};
 
-const getclients = async (req, res) => {
+const getClients = async (req, res) => {//Obtener clientes en base a sus intereses o ciudad
     try {
-        const {interests} = req.params;
-        const data = await clientModel.find(
-            {interests, spam: true}
-        ).select(" email name")
-        res.send(data)
-    } catch (err){
-        console.log(err)
-        handleHttpError(res, 'ERROR_GETTING_CLIENTS', 500)
-    }
+        const { interest, city } = req.query;
+
+        const filter = {spam:true};
+        if (interest) {
+            filter.interests = { $regex: interest, $options: 'i' };
+        }
+        if (city) {
+            filter.city = { $regex: city, $options: 'i' };
+        }
+        const data = await clientModel.find(filter);
+        res.send(data);
+    } catch (err) {
+        handleHttpError(res, "ERROR_GET_CLIENTS")
+};
 }
 
-const createWeb = async (req, res) => {
+const createWeb = async (req, res) => {//Crear una web
     try {
         const comerce = req.comerce
+
         if (comerce.id_page) {
             handleHttpError(res, "COMERCE_ALREADY_HAD_A_PAGE", 401)
             return
@@ -47,12 +60,11 @@ const createWeb = async (req, res) => {
         await comerModel.findByIdAndUpdate(comerce._id, { id_page: data._id }, { new: true })
         res.send(data)
     } catch (err) {
-        console.log(err)
-        handleHttpError(res, "ERROR", 500)
+        handleHttpError(res, "ERROR_CREATE_WEB")
     }
 }
 
-const patchWeb = async (req, res) => {
+const patchText = async (req, res) => {//Insertar texto en una web
     try {
         const token_id = req.comerce.id_page
         const id = req.params.id
@@ -64,15 +76,34 @@ const patchWeb = async (req, res) => {
         const data = await webModel.findByIdAndUpdate(id, {$push: body}, { new: true })
         res.send(data)
     } catch (err) {
-        console.log(err)
-        handleHttpError(res, 'ERROR_UPDATE_WEB')
+        handleHttpError(res, 'ERROR_PATCH_TEXT')
     }
 }
 
-const updateWeb = async (req, res) => {
+const patchScore = async (req, res) => {//Hacer una review en una web
+    try {
+        const id = req.params.id;
+        const { client_review } = req.body;
+        const updateData = {};
+
+        if (client_review.scoring) {
+            updateData['client_review.scoring'] = client_review.scoring
+        }
+        if (client_review.reviews) {
+            updateData['client_review.reviews'] = client_review.reviews
+        }
+        const data = await webModel.findByIdAndUpdate(id,{$push: updateData, $inc: { 'client_review.total_score': 1 }},{ new: true });
+        res.send(data); 
+    } catch (err) {
+        handleHttpError(res, 'ERROR_PATCH_SCORE');
+    }
+};
+
+const updateWeb = async (req, res) => {//Actualizar una web, primero se verifica si la web a actualizar pertenece al comercio que hace la peticion
     try {
         const token_id = req.comerce.id_page
         const id = req.params.id
+
         if (!token_id || !token_id.equals(id)) {
             handleHttpError(res, "AUTH_ERROR", 403)
             return
@@ -81,12 +112,11 @@ const updateWeb = async (req, res) => {
         const data = await webModel.findByIdAndUpdate(id, body, { new: true })
         res.send(data)
     } catch (err) {
-        console.log(err)
         handleHttpError(res, 'ERROR_UPDATE_WEB')
     }
 }
 
-const patchimg = async (req, res) => {
+const patchimg = async (req, res) => {//Poner una imagen en la web
     try {
         const token_id = req.comerce.id_page
         const id = req.params.id
@@ -100,33 +130,33 @@ const patchimg = async (req, res) => {
             url: process.env.PUBLIC_URL + "/" + file.filename
         }
         const data = await webModel.findOneAndUpdate({_id: id}, { $push: { img: fileData.url } }, { new: true })
-
         res.send(data)
     } catch (err) {
-        handleHttpError(res, "ERROR", 500)
+        handleHttpError(res, "ERROR_PATCH_IMG")
     }
 }
 
 
-const deletefisWeb = async (req, res) => {
+const deletefisWeb = async (req, res) => {//Borrado fisico de una web
     try {
         const comerce = req.comerce
         const token_id = req.comerce.id_page
         const id = req.params.id
+        
         if (!token_id.equals(id)) {
             handleHttpError(res, "AUTH_ERROR", 403)
             return
         }
         const del = await webModel.deleteOne({ _id: id });
         await comerModel.findByIdAndUpdate(comerce._id, { id_page: null }, { new: true })
-        res.send("Eliminado")
+        res.json(del)
     } catch (err) {
         console.log(err)
         handleHttpError(res, 'ERROR_DELETE_WEB')
     }
 }
 
-const deleteWeb = async (req, res) => {
+const deleteWeb = async (req, res) => {//Borrado logico de una web
     try {
         const token_id = req.comerce.id_page
         const id = req.params.id
@@ -135,7 +165,7 @@ const deleteWeb = async (req, res) => {
             return
         }
         const del = await webModel.delete({ _id: id });
-        res.send("Eliminado")
+        res.json(del)
     } catch (err) {
         console.log(err)
         handleHttpError(res, 'ERROR_DELETE_WEB')
@@ -143,11 +173,11 @@ const deleteWeb = async (req, res) => {
 }
 
 module.exports = {//Exporto las funciones para la ruta de la web
-    getWeb, getWebs,getclients,
+ getWebs, getClients, 
 
     createWeb, updateWeb,
 
-    patchimg, patchWeb,
+    patchimg, patchText, patchScore,
 
     deleteWeb, deletefisWeb
 };

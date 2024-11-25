@@ -1,246 +1,366 @@
 const express = require("express")
-const { getWebs, getWeb, createWeb, updateWeb, deleteWeb, deletefisWeb, patchimg, patchWeb, getclients } = require("../controllers/web")//Importamos las funciones que vienen del controlador
+const { getWebs, createWeb, updateWeb, deleteWeb, deletefisWeb, patchimg, patchText, patchScore, getClients } = require("../controllers/web")//Importamos las funciones que vienen del controlador
 const { validatorGetWeb, validatorCreateWeb } = require("../validators/web")
-const {authComerWare} = require("../midleware/sesion")
+const { authComerWare, authMiddleware } = require("../midleware/sesion")
 const uploadMiddleware = require("../utils/handleStorage")
 const router = express.Router()
 
 //Aqui se definen las rutas que usaremos para las solicitudes en el documento http
 /**
- * @openapi
- * /api/web:
- *  get:
- *      tags:
- *      - Web
- *      summary: Get all webs
- *      description: Retrieves a list of all webs
- *      responses:
- *          '200':
- *              description: A list of webs
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Get a list of webs or a single web
+ *     description: This endpoint allows filtering and retrieving information about webs stored in the database. It also supports retrieving a specific web by its ID.
+ *     tags:
+ *       - Webs
+ *     parameters:
+ *       - in: query
+ *         name: city
+ *         schema:
+ *           type: string
+ *         description: Filter webs by city. Case-insensitive.
+ *       - in: query
+ *         name: act
+ *         schema:
+ *           type: string
+ *         description: Filter webs by activity. Case-insensitive.
+ *       - in: query
+ *         name: scoring
+ *         schema:
+ *           type: boolean
+ *         description: If present, webs will be sorted by client review score in descending order.
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: string
+ *         description: Unique ID of a specific web.
+ *     responses:
+ *       200:
+ *         description: A list of webs or a single web.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/web'
+ *       500:
+ *         description: Error while retrieving webs.
  */
-router.get('/', getWebs);
+router.get("/", getWebs);
 
 /**
- * @openapi
- * /api/web/{id}:
- *  get:
- *      tags:
- *      - Web
- *      summary: Get a web by ID
- *      description: Retrieves a specific web by its ID
- *      parameters:
- *          - in: path
- *            name: id
- *            required: true
- *            schema:
- *                type: string
- *            description: The ID of the web to retrieve
- *      responses:
- *          '200':
- *              description: Web found
- *          '404':
- *              description: Web not found
+ * @swagger
+ * /api/web/clients:
+ *   get:
+ *     summary: Get a list of clients based on their city and/or interests.
+ *     description: This endpoint allows filtering and retrieving information about clients stored in the database. You can filter by `city`, `interest`, or both.
+ *     tags:
+ *       - Webs
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: city
+ *         schema:
+ *           type: string
+ *         description: Filter clients by city. Case-insensitive.
+ *       - in: query
+ *         name: interest
+ *         schema:
+ *           type: string
+ *         description: Filter clients by interest. Case-insensitive.
+ *     responses:
+ *       200:
+ *         description: A list of clients matching the filters.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/client'
+ *       401:
+ *         description: Unauthorized. Token is missing or invalid.
+ *       500:
+ *         description: Error while retrieving clients.
  */
-router.get('/:id', validatorGetWeb, getWeb);
+router.get("/clients/", authComerWare, getClients);
 
 /**
- * @openapi
- * /api/web/clients/{interests}:
- *  get:
- *      tags:
- *      - Web
- *      summary: Get clients by interest
- *      description: Retrieves clients interested in a specific activity
- *      parameters:
- *          - in: path
- *            name: interests
- *            required: true
- *            schema:
- *                type: string
- *            description: The interest to filter clients by
- *      responses:
- *          '200':
- *              description: Clients found
- *          '404':
- *              description: No clients found
- */
-router.get("/clients/:interests", getclients);
-
-/**
- * @openapi
- * /api/web:
- *  post:
- *      tags:
- *      - Web
- *      summary: Create a new web
- *      description: Creates a new web resource
- *      security:
- *          - bearerAuth: []
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      $ref: "#/components/schemas/web"
- *      responses:
- *          '201':
- *              description: Web created successfully
- *          '401':
- *              description: Unauthorized
+ * @swagger
+ * /:
+ *   post:
+ *     summary: Create a new web and associate it with a commerce
+ *     description: This endpoint allows you to create a new web and associate it with a commerce. It ensures that the commerce does not already have an associated page before creating a new one.
+ *     tags:
+ *       - Webs
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/web' # Reference to the web schema
+ *     responses:
+ *       200:
+ *         description: Successfully created a new web and associated it with the commerce.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/web'
+ *       401:
+ *         description: The commerce already has an associated page.
+ *       500:
+ *         description: An internal server error occurred.
  */
 router.post("/", authComerWare, validatorCreateWeb, createWeb);
 
 /**
- * @openapi
+ * @swagger
  * /api/web/{id}:
- *  put:
- *      tags:
- *      - Web
- *      summary: Update a web by ID
- *      description: Updates a specific web by its ID
- *      security:
- *          - bearerAuth: []
- *      parameters:
- *          - in: path
- *            name: id
- *            required: true
- *            schema:
- *                type: string
- *            description: The ID of the web to update
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      $ref: "#/components/schemas/web"
- *      responses:
- *          '200':
- *              description: Web updated successfully
- *          '404':
- *              description: Web not found
+ *   put:
+ *     summary: Update a specific web by its ID
+ *     description: This endpoint updates the information of an existing web. The commerce must be authorized, and the ID in the token must match the web ID being updated.
+ *     tags:
+ *       - Webs
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique identifier of the web to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/web'
+ *     responses:
+ *       200:
+ *         description: The updated web object.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/web'
+ *       403:
+ *         description: Authorization error. The commerce is not allowed to update this web.
+ *       404:
+ *         description: Web not found.
+ *       500:
+ *         description: Error while updating the web.
  */
 router.put("/:id", authComerWare, validatorGetWeb, validatorCreateWeb, updateWeb);
 
 /**
- * @openapi
+ * @swagger
  * /api/web/text/{id}:
- *  patch:
- *      tags:
- *      - Web
- *      summary: Update text of a web
- *      description: Updates the text content of a specific web by its ID
- *      security:
- *          - bearerAuth: []
- *      parameters:
- *          - in: path
- *            name: id
- *            required: true
- *            schema:
- *                type: string
- *            description: The ID of the web to update text
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      type: object
- *                      properties:
- *                          text:
- *                              type: array
- *                              items:
- *                                  type: string
- *      responses:
- *          '200':
- *              description: Text updated successfully
- *          '404':
- *              description: Web not found
+ *   patch:
+ *     summary: Update the text field of a specific web by its ID
+ *     description: This endpoint allows you to update the `text` field of a web by appending new items. The commerce must be authorized, and the ID in the token must match the web ID being updated.
+ *     tags:
+ *       - Webs
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique identifier of the web to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               text:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["Nuevo texto del artículo sobre Lima"]
+ *     responses:
+ *       200:
+ *         description: The updated web object with the new text appended.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/web'
+ *       403:
+ *         description: Authorization error. The commerce is not allowed to update this web.
+ *       404:
+ *         description: Web not found.
+ *       500:
+ *         description: Error while updating the web.
  */
-router.patch("/text/:id", authComerWare, validatorGetWeb, patchWeb);
+router.patch("/text/:id", authComerWare, validatorGetWeb, patchText);
 
 /**
- * @openapi
+ * @swagger
+ * /api/web/review/{id}:
+ *   patch:
+ *     summary: Update the client review of a specific web by its ID
+ *     description: This endpoint allows you to add new scores and reviews to the `client_review` field of a web. The `scoring` and `reviews` fields are updated by appending new values to the existing arrays.
+ *     tags:
+ *       - Webs
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique identifier of the web to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               client_review:
+ *                 type: object
+ *                 properties:
+ *                   scoring:
+ *                     type: array
+ *                     items:
+ *                       type: number
+ *                     example: [4]
+ *                   reviews:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     example: ["Muy buen artículo"]
+ *     responses:
+ *       200:
+ *         description: The updated web object with the new reviews and scores appended.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/web'
+ *       400:
+ *         description: Bad Request. Invalid data format or missing fields.
+ *       404:
+ *         description: Web not found.
+ *       500:
+ *         description: Error while updating the web.
+ */
+router.patch("/review/:id", authMiddleware, validatorGetWeb, patchScore);
+
+/**
+ * @swagger
  * /api/web/img/{id}:
- *  patch:
- *      tags:
- *      - Web
- *      summary: Update image of a web
- *      description: Adds an image to a specific web by its ID
- *      security:
- *          - bearerAuth: []
- *      parameters:
- *          - in: path
- *            name: id
- *            required: true
- *            schema:
- *                type: string
- *            description: The ID of the web to update image
- *      requestBody:
- *          required: true
- *          content:
- *              multipart/form-data:
- *                  schema:
- *                      type: object
- *                      properties:
- *                          image:
- *                              type: string
- *                              format: binary
- *      responses:
- *          '200':
- *              description: Image updated successfully
- *          '404':
- *              description: Web not found
+ *   patch:
+ *     summary: Add an image to the web's img array
+ *     description: This endpoint allows authorized commerces to upload and add a new image to the `img` field of a specific web. The `img` field is updated by appending the URL of the uploaded image.
+ *     tags:
+ *       - Webs
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique identifier of the web to update.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: The image file to upload.
+ *     responses:
+ *       200:
+ *         description: The updated web object with the new image URL added to the `img` field.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/web'
+ *       403:
+ *         description: Authorization error. The commerce is not allowed to update this web.
+ *       500:
+ *         description: Error while adding the image.
  */
 router.patch("/img/:id", authComerWare, validatorGetWeb, uploadMiddleware.single("image"), patchimg);
 
 /**
- * @openapi
+ * @swagger
  * /api/web/{id}:
- *  delete:
- *      tags:
- *      - Web
- *      summary: Soft delete a web by ID
- *      description: Soft deletes a specific web by its ID
- *      security:
- *          - bearerAuth: []
- *      parameters:
- *          - in: path
- *            name: id
- *            required: true
- *            schema:
- *                type: string
- *            description: The ID of the web to soft delete
- *      responses:
- *          '200':
- *              description: Web soft deleted successfully
- *          '404':
- *              description: Web not found
+ *   delete:
+ *     summary: Delete a specific web by its ID
+ *     description: This endpoint allows an authorized commerce to delete a web by its ID. Only the commerce that owns the web can perform this operation.
+ *     tags:
+ *       - Webs
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique identifier of the web to delete.
+ *     responses:
+ *       200:
+ *         description: The web was successfully deleted.
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Eliminado"
+ *       403:
+ *         description: Authorization error. The commerce is not allowed to delete this web.
+ *       404:
+ *         description: Web not found.
+ *       500:
+ *         description: Error while deleting the web.
  */
 router.delete("/:id", authComerWare, validatorGetWeb, deletefisWeb);
 
 /**
- * @openapi
+ * @swagger
  * /api/web/archive/{id}:
- *  delete:
- *      tags:
- *      - Web
- *      summary: Permanently delete a web by ID
- *      description: Permanently deletes a specific web by its ID
- *      security:
- *          - bearerAuth: []
- *      parameters:
- *          - in: path
- *            name: id
- *            required: true
- *            schema:
- *                type: string
- *            description: The ID of the web to delete permanently
- *      responses:
- *          '200':
- *              description: Web permanently deleted successfully
- *          '404':
- *              description: Web not found
+ *   delete:
+ *     summary: Archive a specific web by its ID
+ *     description: This endpoint allows an authorized commerce to archive a web by its ID. Only the commerce that owns the web can perform this operation. The web will be logically deleted or archived.
+ *     tags:
+ *       - Webs
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique identifier of the web to archive.
+ *     responses:
+ *       200:
+ *         description: The web was successfully archived.
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Eliminado"
+ *       403:
+ *         description: Authorization error. The commerce is not allowed to archive this web.
+ *       404:
+ *         description: Web not found.
+ *       500:
+ *         description: Error while archiving the web.
  */
 router.delete("/archive/:id", authComerWare, validatorGetWeb, deleteWeb);
-
 
 module.exports = router

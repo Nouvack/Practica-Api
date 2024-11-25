@@ -45,9 +45,9 @@ Content-Type: application/json
 }
 
 ###Actualizar usuario 1
-PUT http://localhost:3000/api/clients/671f548cd4e7912c26b8c1fa
+PUT http://localhost:3000/api/clients/update/673bc5b4d4e8da059529bbd2
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzFmYTk4NGQxNjMzZWVmNDhlYjNjMzEiLCJyb2xlIjpbImNsaWVudCJdLCJpYXQiOjE3MzAxMjgyNzUsImV4cCI6MTczMDEzNTQ3NX0.GoLJONKIo-wDzCLrfda_nfEr4xEBbEvZAqohy_xCC98
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzNiYzViNGQ0ZThkYTA1OTUyOWJiZDIiLCJyb2xlIjpbImNsaWVudCJdLCJpYXQiOjE3MzE5NzA2NjIsImV4cCI6MTczMTk4NTA2Mn0.8veW0I8xOqM_07cer6Az8hJpyTWhvPX2tjMjQuuomGk
 
 {
     "name": "Juan Tetas",
@@ -60,5 +60,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzFmYTk4N
 }
 
 ###Borrar Usuario
-DELETE http://localhost:3000/api/clients/671fc8e7f49ac4dc4dbeff71
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzFmYzhlM2Y0OWFjNGRjNGRiZWZmNmYiLCJyb2xlIjpbImNsaWVudCJdLCJpYXQiOjE3MzAxMzYzMDAsImV4cCI6MTczMDE0MzUwMH0.-e-L5LHlYeb7YTBFOlNkmS4qoG6PK26ulcf1gm8Pp4o
+DELETE http://localhost:3000/api/clients/delete/6743103fddd3fdd3d0dec724
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQzMTAzZmRkZDNmZGQzZDBkZWM3MjQiLCJyb2xlIjpbImNsaWVudCJdLCJpYXQiOjE3MzI0NDgzMjEsImV4cCI6MTczMjQ2MjcyMX0.FsbzFsZjNSExU9qWVf7zNR6VfFDq_8j3E_e5vJTbEAM

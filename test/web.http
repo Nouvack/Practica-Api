@@ -1,35 +1,31 @@
 
-#Mostrar todas las webs
-GET http://localhost:3000/api/web HTTP/1.1
+#Mostrar todas las webs/por id/ ciudad/actividad/ o tambien ordenadas en base a su scoring
+GET http://localhost:3000/api/web?id=673f5080a67800935e8c6efa HTTP/1.1
+
+### 
+#Ver clientes por Intereses
+Get http://localhost:3000/api/web/clients?interest=cocina&city=arequipa HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiJCMTIzNDU2NzgiLCJpYXQiOjE3MzIyMDQwMTAsImV4cCI6MTc2Mzc0MDAxMH0.IvOUPOtfMrmiYHRG8pR2Jxaufb21fdXtULn3EtgCUUc
 
 ###
-#Peticion por id
-GET http://localhost:3000/api/web/672292db0bab811cf14b8c9e HTTP/1.1
-###
-Get http://localhost:3000/api/web/clients/turismo
-
-
-
-
 #Crear un nueva web
 POST http://localhost:3000/api/web HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiJCMTIzNDU2NzgiLCJpYXQiOjE3MzAzMTg1MzEsImV4cCI6MTc2MTg1NDUzMX0.kL13WcMk4Z-8hSf_TiLQkNLWWhHtPEYznlnzzDFMHVA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiJCMTIzNDU2NzgiLCJpYXQiOjE3MzIwNDYxNTMsImV4cCI6MTc2MzU4MjE1M30.-mH9F8gWzfAFZmWC2nNtKpDqW4wsHVsPq3Anl6dspjI
 
 {
   "city": "Lima",
   "activity": "Turismo",
-  "tittle": "Explorando Lima",
-  "sumary": "Una guía rápida para conocer Lima",
-  "text": ["Texto del artículo sobre Lima"],
+  "tittle": "Ven y disfruta de las maravillas de Lima",
+  "sumary": "Nos enfocamos en explorar la ciudad de Lima",
+  "text": [],
   "img": [],
   "client_review": {
-    "scoring": 4,
-    "score": 5,
-    "reviews": "Muy buen artículo"
+    "scoring": [],
+    "total_score": 0,
+    "reviews": []
   }
 }
-
 
 ###
 #Actualizar datos de una web
@@ -43,26 +39,24 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiJCOTg3NjU0M
   "tittle": "Explorando Lima",
   "sumary": "Una guía rápida para conocer Lima",
   "text": ["Texto del artículo sobre Lima"],
-  "img": [],
-  "client_review": {
-    "scoring": 4,
-    "score": 5,
-    "reviews": "Muy buen artículo"
+  "img": []
+}
+
+###
+PATCH http://localhost:3000/api/web/review/673cc6eeac65e3a7209a7f84 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzNjYzVhZGFjNjVlM2E3MjA5YTdmNzEiLCJyb2xlIjpbImFkbWluIl0sImlhdCI6MTczMjAzNjM4MSwiZXhwIjoxNzMyMDUwNzgxfQ.4gjkPgDLWxf_zfZgOPZcDDWTuaHFyFPrG8YVTowQOG0
+
+{
+   "client_review": {
+    "scoring": [4],
+    "reviews": ["Muy buen artículo"]
   }
 }
 
 ###
-PATCH http://localhost:3000/api/web/text/672292db0bab811cf14b8c9e HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiJCMTIzNDU2NzgiLCJpYXQiOjE3MzAzMjA1ODcsImV4cCI6MTc2MTg1NjU4N30.9EyrpxiAlx4L_eOua_qby3WmgsNEPxF9H4NooH9G-ao
-
-{
-  "text": ["Nuevo tsexto del artículo sobre Lima"]
-}
-
-###
-PATCH http://localhost:3000/api/web/img/672292db0bab811cf14b8c9e
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiJCMTIzNDU2NzgiLCJpYXQiOjE3MzAzMjA1ODcsImV4cCI6MTc2MTg1NjU4N30.9EyrpxiAlx4L_eOua_qby3WmgsNEPxF9H4NooH9G-ao
+PATCH http://localhost:3000/api/web/img/673ced789e249a3e4354ba3e
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiJCMTIzNDU2NzgiLCJpYXQiOjE3MzIwNDYxNTMsImV4cCI6MTc2MzU4MjE1M30.-mH9F8gWzfAFZmWC2nNtKpDqW4wsHVsPq3Anl6dspjI
 Content-Type: multipart/form-data; boundary=Boundry
 
 --Boundry
@@ -73,11 +67,23 @@ Content-Type: image/jpg
 --Boundry--
 
 ###
+PATCH http://localhost:3000/api/web/text/672292db0bab811cf14b8c9e HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiJCMTIzNDU2NzgiLCJpYXQiOjE3MzAzMjA1ODcsImV4cCI6MTc2MTg1NjU4N30.9EyrpxiAlx4L_eOua_qby3WmgsNEPxF9H4NooH9G-ao
+
+{
+  "text": ["Nuevo tsexto del artículo sobre Lima"]
+}
+
+
+###
 #Borrado fisico
-DELETE http://localhost:3000/api/web/672290d2e6664c34a712a7e9
+DELETE http://localhost:3000/api/web/672292db0bab811cf14b8c9e
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiJCMTIzNDU2NzgiLCJpYXQiOjE3MzAzMTg1MzEsImV4cCI6MTc2MTg1NDUzMX0.kL13WcMk4Z-8hSf_TiLQkNLWWhHtPEYznlnzzDFMHVA
 
 ###
 #Borrado logico
-DELETE http://localhost:3000/api/web/archive/672290d2e6664c34a712a7e9
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiJCMTIzNDU2NzgiLCJpYXQiOjE3MzAzMTg1MzEsImV4cCI6MTc2MTg1NDUzMX0.kL13WcMk4Z-8hSf_TiLQkNLWWhHtPEYznlnzzDFMHVA
+DELETE http://localhost:3000/api/web/archive/672292db0bab811cf14b8c9e
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWYiOiJCMTIzNDU2NzgiLCJpYXQiOjE3MzE4NzM4NzksImV4cCI6MTc2MzQwOTg3OX0.eSYr52FGOD0H4sTa2eKel3eH_bwdYbw1zJX1RaUcwj4
+
+###

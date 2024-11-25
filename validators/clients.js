@@ -8,8 +8,8 @@ const validatorRegister = [
     check("password").exists().notEmpty().isLength({ min: 8, max: 16 }),
     check("age").exists().notEmpty().isNumeric(),
     check("city").exists().notEmpty(),
-    check("interests").exists().notEmpty().isArray(),
-    check("spam").exists().notEmpty().isBoolean(),
+    check("interests").exists().isArray(),
+    check("spam").exists().isBoolean(),
     (req, res, next) => {
         return validateResults(req, res, next)
     }

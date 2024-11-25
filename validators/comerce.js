@@ -20,4 +20,24 @@ const validatorGetItem = [
     }
 ];
 
-module.exports = { validatorCreateitem, validatorGetItem }
+const validatorMail = [
+    check("subject").exists().notEmpty(),
+    check("text").exists().notEmpty(),
+    check("to").exists().notEmpty(),
+    (req, res, next) => {
+        return validateResults(req, res, next)
+    }
+]
+
+const validatorUpdateComerce = [
+    check('name').exists().notEmpty(),
+    check('cif').exists().notEmpty(),
+    check('adress').exists().notEmpty(),
+    check('email').exists().isEmail(),
+    check('phone').exists().notEmpty(),
+    (req, res, next) => {
+        return validateResults(req, res, next);
+    }
+];
+
+module.exports = { validatorCreateitem, validatorGetItem, validatorMail, validatorUpdateComerce }

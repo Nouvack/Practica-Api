@@ -7,9 +7,10 @@ const { IncomingWebhook } = require("@slack/webhook")
 const loggerStream = require("./utils/handleLogger")
 const swaggerUi = require("swagger-ui-express")
 const swaggerSpecs = require("./docs/swagger")
-
+const cors = require("cors")
 
 const app = express()
+app.use(cors());
 app.use(express.static("storage"))
 app.use(express.json())
 app.use("/api-docs",
@@ -36,3 +37,5 @@ app.listen(port, () => {
     console.log("Servidor escuchando en el puerto " + port)
     dbConnect();
 })
+
+module.exports = app
